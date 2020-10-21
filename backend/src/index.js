@@ -1,5 +1,5 @@
 const express = require("express");
-const auth_routes = require("./routes/auth/auth.js");
+const apiRouter = require("./routes/api");
 const PORT = process.env.PORT || 9000;
 require("./db");
 
@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Rutas
 
-app.use("/auth", auth_routes);
+app.use("/api", apiRouter);
 
 // Ejecucion del servidor
 
