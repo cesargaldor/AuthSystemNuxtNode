@@ -14,6 +14,16 @@ export const mutations = {
 };
 
 export const actions = {
+  // Al abrir comprueba si hay un token en el localStorage y lo mete en el store
+  checkAuth({ commit }) {
+    if (process.browser) {
+      if (localStorage.getItem("usertoken")) {
+        commit("login", localStorage.getItem("usertoken"));
+      } else {
+        commit("login", null);
+      }
+    }
+  },
   //Accion de register
   async register({ username, email, password }) {
     const res = await this.$axios.$post(

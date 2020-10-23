@@ -3,7 +3,10 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: "Index",
+  middleware: "auth"
+};
 </script>
 
 <style></style>
