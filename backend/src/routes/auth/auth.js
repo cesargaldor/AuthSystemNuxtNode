@@ -2,22 +2,30 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const { User } = require("../../db");
 const { check, validationResult } = require("express-validator");
+const moment = require("moment");
+const jwt = require("jwt-simple");
 
 // Login del usuario
 
 router.get("/login", async (req, res) => {
   const { username, password } = req.body;
+  /* El metodo comprueba si hay un usuario en la base de datos que 
+  coincida con el que introduce el usuario*/
   try {
     const user = await User.findOne({
       where: {
         username: username,
       },
     });
-
+    /* Si existe, comprueba la contraseña que el usuario introduce con la que está
+    encriptada en la base de datos*/
     const validPassword = await bcrypt.compare(password, user.password);
+    /* Si la contraseña es válida, se llama al método que crea el token y se devuelve en
+    la respuesta */
     if (validPassword) {
       res.json({
         message: "Login succesful",
+        token: createToken(user),
       });
     } else {
       res.json({
@@ -30,6 +38,20 @@ router.get("/login", async (req, res) => {
     });
   }
 });
+
+// Método para crear un token
+
+const createToken = (user) => {
+  /* Este método crea un payload al que le mete el id del usuario y una fecha de expiracion
+  que será 1 hora después de creacion del token */
+  const payload = {
+    userId: user.id,
+    createdAt: moment().unix(),
+    expiredAt: moment().add(60, "minutes").unix(),
+  };
+
+  return jwt.encode(payload, "secretkeyword");
+};
 
 // Registrar usuario
 
