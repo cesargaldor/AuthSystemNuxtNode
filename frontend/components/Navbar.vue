@@ -74,8 +74,10 @@
           ></path></svg
         >Upload</nuxt-link
       >
-      <nuxt-link to="/" class="py-1"> Login</nuxt-link>
-      <nuxt-link to="/" class="sm:hidden lg:block py-1"> Register</nuxt-link>
+      <nuxt-link to="/login" class="py-1"> Login</nuxt-link>
+      <nuxt-link to="/register" class="sm:hidden lg:block py-1">
+        Register</nuxt-link
+      >
     </div>
   </div>
 </template>
@@ -86,7 +88,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .title {
   background: -webkit-linear-gradient(#fd856d, #e25896);
   background-clip: text;
@@ -96,6 +98,7 @@ export default {
 
 .input-search:focus {
   box-shadow: 0 0 0.01rem #fff, inset 0 0 0.01rem #fff, 0 0 1rem #e25896;
+  border: 1px solid #e25896;
 }
 
 .btn-grad {

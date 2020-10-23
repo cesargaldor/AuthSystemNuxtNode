@@ -7,34 +7,42 @@ const jwt = require("jwt-simple");
 
 // Login del usuario
 
-router.get("/login", async (req, res) => {
-  const { username, password } = req.body;
-  /* El metodo comprueba si hay un usuario en la base de datos que 
+router.post("/login", async (req, res) => {
+  //const { email, password } = req.body;
+
+  /* Se comprueba si hay un email en la base de datos que 
   coincida con el que introduce el usuario*/
   try {
     const user = await User.findOne({
       where: {
-        username: username,
+        email: req.body.email,
       },
     });
-    /* Si existe, comprueba la contraseña que el usuario introduce con la que está
-    encriptada en la base de datos*/
-    const validPassword = await bcrypt.compare(password, user.password);
-    /* Si la contraseña es válida, se llama al método que crea el token y se devuelve en
-    la respuesta */
-    if (validPassword) {
-      res.json({
-        message: "Login succesful",
-        token: createToken(user),
-      });
+    /* Si existe el email, compara la contraseña que hay en la base de datos
+      con la que ha introducido el usuario*/
+    if (user) {
+      const validPassword = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (validPassword) {
+        res.json({
+          message: "Login succesful",
+          token: createToken(user),
+        });
+      } else {
+        res.json({
+          message: "Wrong password",
+        });
+      }
     } else {
       res.json({
-        message: "Wrong password",
+        message: "That email doesn't exists.",
       });
     }
   } catch (error) {
     res.json({
-      message: "That username doesn't exists.",
+      message: error,
     });
   }
 });
@@ -59,7 +67,8 @@ router.post(
   "/register",
   /*Esto actua como un middleware en la ruta, checkeando si se producen errores o no */
   [
-    check("name", "Name cannot be empty").not().isEmpty(),
+    check("email", "Email must be correct").isEmail(),
+    check("email", "Email cannot be empty").not().isEmpty(),
     check("username", "Username cannot be empty").not().isEmpty(),
     check("password", "Password cannot be empty").not().isEmpty(),
     check("password", "Password must be 6 characters long").isLength({
@@ -68,7 +77,7 @@ router.post(
   ],
   async (req, res) => {
     // Traigo todas las variables desde el request
-    const { name, lastName, username, password } = req.body;
+    const { email, username, password } = req.body;
     // Y encripto la contraseña
     const securePassword = await bcrypt.hash(password, 10);
 
@@ -77,14 +86,13 @@ router.post(
 
     /* Si hay errores, devuelve un status 422 y los errores en formato json*/
     if (!errors.isEmpty()) {
-      return res.status(422).json({
-        message: errors.array(),
+      return res.json({
+        errors: errors.array(),
       });
     }
     // Si no, crea el usuario
     await User.create({
-      name: name,
-      lastName: lastName,
+      email: email,
       username: username,
       password: securePassword,
     });
