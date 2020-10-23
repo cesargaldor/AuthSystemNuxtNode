@@ -1,29 +1,36 @@
-export const state = () => ({
-  userToken: null,
-  user: null
-});
+const cookieparser = process.server ? require("cookieparser") : undefined;
+import cookies from "js-cookie";
+
+export const state = () => {
+  return {
+    userToken: null
+  };
+  //user: null
+};
 
 export const mutations = {
-  register(state, user) {
-    state.user = user;
-  },
+  // register(state, user) {
+  //   state.user = user;
+  // },
 
-  login(state, userToken) {
+  setToken(state, userToken) {
     state.userToken = userToken;
   }
 };
 
 export const actions = {
-  // Al abrir comprueba si hay un token en el localStorage y lo mete en el store
-  checkAuth({ commit }) {
-    if (process.browser) {
-      if (localStorage.getItem("usertoken")) {
-        commit("login", localStorage.getItem("usertoken"));
-      } else {
-        commit("login", null);
-      }
+  nuxtServerInit({ commit }, { req }) {
+    if (req.headers.cookie) {
+      const token = req.headers.cookie;
+      const parsed = cookieparser.parse(token);
+
+      const tokenFinal = parsed.usertoken;
+      commit("setToken", tokenFinal);
+    } else {
+      commit("setToken", null);
     }
   },
+
   //Accion de register
   async register({ username, email, password }) {
     const res = await this.$axios.$post(
@@ -50,8 +57,9 @@ export const actions = {
 
     if (res.message == "Login succesful") {
       const userToken = res.token;
-      commit("login", userToken);
-      localStorage.setItem("usertoken", userToken);
+      commit("setToken", userToken);
+      // TODO: Guardar en el state los datos del usuario al registrarse
+      //localStorage.setItem("usertoken", userToken);
       return res;
     } else {
       return res;

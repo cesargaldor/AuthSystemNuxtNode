@@ -39,7 +39,10 @@
 </template>
 
 <script>
+import Cookie from "js-cookie";
+
 export default {
+  middleware: "isAuth",
   name: "Login",
   data() {
     return {
@@ -60,6 +63,8 @@ export default {
         });
 
         if (res.message == "Login succesful") {
+          const token = res.token;
+          Cookie.set("usertoken", token);
           this.$router.push("/");
         } else {
           alert(res.message);

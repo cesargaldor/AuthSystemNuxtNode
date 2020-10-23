@@ -9,15 +9,7 @@
 
 <script>
 export default {
-  name: "Layout",
-  methods: {
-    checkAuth() {
-      this.$store.dispatch("checkAuth");
-    }
-  },
-  created() {
-    this.checkAuth();
-  }
+  name: "Layout"
 };
 </script>
 

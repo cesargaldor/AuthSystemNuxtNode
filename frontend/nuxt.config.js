@@ -1,5 +1,7 @@
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
+  mode: "universal",
+  target: "server",
   head: {
     title: "frontend",
     meta: [
@@ -21,7 +23,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [],
+  plugins: ["@/plugins/vueCookies.js"],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,

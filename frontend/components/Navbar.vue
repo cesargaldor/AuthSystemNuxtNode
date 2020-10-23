@@ -74,8 +74,15 @@
           ></path></svg
         >Upload</nuxt-link
       >
-      <nuxt-link to="/login" class="py-1"> Login</nuxt-link>
-      <nuxt-link to="/register" class="sm:hidden lg:block py-1">
+      <nuxt-link to="/login" class="py-1" v-if="!$store.state.userToken">
+        Login</nuxt-link
+      >
+      <span v-else @click="logout" class="cursor-pointer">Sign out</span>
+      <nuxt-link
+        to="/register"
+        class="sm:hidden lg:block py-1"
+        v-show="!$store.state.userToken"
+      >
         Register</nuxt-link
       >
     </div>
@@ -83,8 +90,17 @@
 </template>
 
 <script>
+import Cookie from "js-cookie";
+
 export default {
-  name: "Navbar"
+  name: "Navbar",
+  methods: {
+    logout() {
+      Cookie.remove("usertoken");
+      this.$store.commit("setToken", null);
+      this.$router.push("/login");
+    }
+  }
 };
 </script>
 
