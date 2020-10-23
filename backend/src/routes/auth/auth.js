@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const { User } = require("../../db");
+const { check, validationResult } = require("express-validator");
 
 // Login del usuario
 
@@ -32,10 +33,33 @@ router.get("/login", async (req, res) => {
 
 // Registrar usuario
 
-router.post("/register", async (req, res) => {
-  const { name, lastName, username, password } = req.body;
-  const securePassword = await bcrypt.hash(password, 10);
-  try {
+router.post(
+  "/register",
+  /*Esto actua como un middleware en la ruta, checkeando si se producen errores o no */
+  [
+    check("name", "Name cannot be empty").not().isEmpty(),
+    check("username", "Username cannot be empty").not().isEmpty(),
+    check("password", "Password cannot be empty").not().isEmpty(),
+    check("password", "Password must be 6 characters long").isLength({
+      min: 6,
+    }),
+  ],
+  async (req, res) => {
+    // Traigo todas las variables desde el request
+    const { name, lastName, username, password } = req.body;
+    // Y encripto la contraseña
+    const securePassword = await bcrypt.hash(password, 10);
+
+    /* Aqui se comprueba si hay errores en la validacion anterior*/
+    const errors = validationResult(req);
+
+    /* Si hay errores, devuelve un status 422 y los errores en formato json*/
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: errors.array(),
+      });
+    }
+    // Si no, crea el usuario
     await User.create({
       name: name,
       lastName: lastName,
@@ -45,12 +69,8 @@ router.post("/register", async (req, res) => {
     res.json({
       message: "User added succesfully",
     });
-  } catch (error) {
-    res.json({
-      message: "Something went wrong",
-    });
   }
-});
+);
 
 // Editar usuario
 
