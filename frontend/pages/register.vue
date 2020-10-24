@@ -1,5 +1,7 @@
 <template>
-  <div class="-mt-16 w-full h-screen flex justify-center items-center">
+  <div
+    class="sm:-mt-16 lg:-mt-1 xl:-mt-16 w-full h-screen flex justify-center items-center"
+  >
     <div class="sm:w-11/12 lg:w-1/3 xl:w-3/12">
       <h1 class="text-3xl text-center font-bold mb-2">
         Register for free
@@ -20,17 +22,10 @@
         />
         <label class="mb-2">Password</label>
         <input
-          class="input-search py-2 px-2 rounded-xl mb-5 border border-gray-100 bg-black focus:outline-none focus:border-pink-400"
+          class="input-search py-2 px-2 rounded-xl mb-8 border border-gray-100 bg-black focus:outline-none focus:border-pink-400"
           type="password"
           v-model="password"
         />
-        <div class="flex justify-end mb-5">
-          <nuxt-link to="/reset">
-            <span class="forgot text-xs">
-              Forgot your password?
-            </span>
-          </nuxt-link>
-        </div>
         <button
           @click="register"
           class="btn-grad py-2 focus:outline-none text-center cursor-pointer"

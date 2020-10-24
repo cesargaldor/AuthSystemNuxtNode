@@ -1,6 +1,8 @@
 <template>
-  <div class="-mt-16 w-full h-screen flex justify-center items-center">
-    <div class="sm:w-11/12 lg:w-1/3 xl:w-3/12">
+  <div
+    class="sm:-mt-16 lg:-mt-16 w-full h-screen flex justify-center items-center"
+  >
+    <div class="sm:w-11/12 lg:w-1/3 xl:w-3/12 lg:mt-6">
       <h1 class="text-3xl text-center font-bold mb-2">Login to RateThisVid</h1>
       <p class="text-sm text-center mb-6">Access your RateThisVid account</p>
       <div class="flex flex-col">
@@ -64,7 +66,7 @@ export default {
 
         if (res.message == "Login succesful") {
           const token = res.token;
-          Cookie.set("usertoken", token);
+          Cookie.set("usertoken", token, { expires: 7 / 168 });
           this.$router.push("/");
         } else {
           alert(res.message);
