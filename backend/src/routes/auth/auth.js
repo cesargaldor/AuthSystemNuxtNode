@@ -91,14 +91,20 @@ router.post(
       });
     }
     // Si no, crea el usuario
-    await User.create({
-      email: email,
-      username: username,
-      password: securePassword,
-    });
-    res.json({
-      message: "User added succesfully",
-    });
+    try {
+      await User.create({
+        email: email,
+        username: username,
+        password: securePassword,
+      });
+      res.json({
+        message: "User added succesfully",
+      });
+    } catch (error) {
+      res.json({
+        message: "Already exists an user with that email or username",
+      });
+    }
   }
 );
 

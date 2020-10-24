@@ -5,14 +5,9 @@ export const state = () => {
   return {
     userToken: null
   };
-  //user: null
 };
 
 export const mutations = {
-  // register(state, user) {
-  //   state.user = user;
-  // },
-
   setToken(state, userToken) {
     state.userToken = userToken;
   }
@@ -31,19 +26,19 @@ export const actions = {
     }
   },
 
-  //Accion de register
-  async register({ username, email, password }) {
-    const res = await this.$axios.$post(
-      "http://localhost:9000/api/auth/register",
-      {
-        username: username,
-        email: email,
-        password: password
-      }
-    );
-    return res;
-    //commit("register", userToken);
-  },
+  //Accion de register (Daba fallo al pasar los datos por el payload)
+  // async register({ email, username, password }) {
+  //   console.log(username, email, password);
+  //   const res = await this.$axios.$post(
+  //     "http://localhost:9000/api/auth/register",
+  //     {
+  //       email: email,
+  //       username: username,
+  //       password: password
+  //     }
+  //   );
+  //   return res;
+  // },
 
   //Accion de login
   async login({ commit }, { email, password }) {

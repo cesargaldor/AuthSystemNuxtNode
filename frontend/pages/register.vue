@@ -10,19 +10,19 @@
         <input
           class="input-search py-2 px-2 rounded-xl mb-5 border border-gray-100 bg-black focus:outline-none focus:border-pink-400"
           type="text"
-          v-model="user.email"
+          v-model="email"
         />
         <label class="mb-2">Username</label>
         <input
           class="input-search py-2 px-2 rounded-xl mb-5 border border-gray-100 bg-black focus:outline-none focus:border-pink-400"
           type="text"
-          v-model="user.username"
+          v-model="username"
         />
         <label class="mb-2">Password</label>
         <input
           class="input-search py-2 px-2 rounded-xl mb-5 border border-gray-100 bg-black focus:outline-none focus:border-pink-400"
           type="password"
-          v-model="user.password"
+          v-model="password"
         />
         <div class="flex justify-end mb-5">
           <nuxt-link to="/reset">
@@ -51,32 +51,53 @@ export default {
   name: "Register",
   data() {
     return {
-      user: {
-        email: "",
-        username: "",
-        password: ""
-      },
-      errors: null
+      email: "",
+      username: "",
+      password: ""
     };
   },
   methods: {
+    // async register() {
+    //   if (this.email == "" || this.username == "" || this.password == "") {
+    //     alert("Complete all the fields");
+    //   } else {
+    //     const params = {
+    //       email: this.email,
+    //       username: this.username,
+    //       password: this.password
+    //     };
+    //     const res = await this.$store.dispatch("register", params);
+
+    //     if (res.message == "User added succesfully") {
+    //       alert(res.message);
+    //       this.$router.push("/login");
+    //     } else {
+    //       for (let i = 0; i < res.errors.length; i++) {
+    //         alert(res.errors[i].msg);
+    //       }
+    //     }
+    //   }
+    // }
+
     async register() {
-      if (
-        this.user.email == "" ||
-        this.user.username == "" ||
-        this.user.password == ""
-      ) {
+      if (this.email == "" || this.username == "" || this.password == "") {
         alert("Complete all the fields");
       } else {
-        const res = await this.$store.dispatch("register", {
-          email: this.user.email,
-          username: this.user.username,
-          password: this.user.password
-        });
-
+        const res = await this.$axios.$post(
+          "http://localhost:9000/api/auth/register",
+          {
+            email: this.email,
+            username: this.username,
+            password: this.password
+          }
+        );
         if (res.message == "User added succesfully") {
           alert(res.message);
           this.$router.push("/login");
+        } else if (
+          res.message == "Already exists an user with that email or username"
+        ) {
+          alert(res.message);
         } else {
           for (let i = 0; i < res.errors.length; i++) {
             alert(res.errors[i].msg);
