@@ -4,14 +4,19 @@ const { Sequelize } = require("sequelize");
 const userModel = require("./models/users");
 
 // Creamos la conexión
-const connection = new Sequelize("videos", "cgd", "betis96", {
-  host: "localhost",
-  dialect: "mysql",
-  define: {
-    charset: "utf8",
-    collate: "utf8_general_ci",
-  },
-});
+const connection = new Sequelize(
+  process.env.DB_DATABASE,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: "mysql",
+    define: {
+      charset: "utf8",
+      collate: "utf8_general_ci",
+    },
+  }
+);
 
 // Conectamos cada uno de los modelos con la bd
 
